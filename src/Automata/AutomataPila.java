@@ -6,6 +6,7 @@
 package Automata;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *
@@ -14,9 +15,11 @@ import java.util.ArrayList;
 public class AutomataPila {
     public ArrayList<Estado> estados;
     public Estado estadoInicial;
+    public static Stack<String> pila;
     
     public AutomataPila(){
         estados = new ArrayList<>();
+        pila = new Stack<>();
     }
     
     public void agregarEstado(Estado estado){

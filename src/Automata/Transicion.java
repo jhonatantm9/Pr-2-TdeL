@@ -13,4 +13,19 @@ public class Transicion {
     String operacionPila;
     String operacionEstado;
     String operacionEntrada;
+    String operacionReplace;
+    
+    public Transicion(String opPila, String opEstado, String opEntrada){
+        operacionPila = opPila;
+        operacionEstado = opEstado;
+        operacionEntrada = opEntrada;
+        operacionReplace = "";
+    }
+    
+    public Transicion(String opPila, String opEstado, String opEntrada, String opReplace){
+        operacionPila = opPila;
+        operacionEstado = opEstado;
+        operacionEntrada = opEntrada;
+        operacionReplace = opReplace;
+    }
 }
