@@ -9,7 +9,10 @@ package Automata;
  *
  * @author jhona
  */
-public class Transicion {
-    protected boolean esAceptacion;
+public class TransicionAceptacion extends Transicion{
+
+    public TransicionAceptacion() {
+        esAceptacion = true;
+    }
     
 }
