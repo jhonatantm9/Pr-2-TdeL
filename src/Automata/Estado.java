@@ -31,11 +31,13 @@ public class Estado {
     
     public void inicializarTransiciones(int numSimbolosPila, int numSimbolosEntrada){
         transiciones = new Transicion[numSimbolosPila][numSimbolosEntrada];
+        //simbolosEntrada = new Character[numSimbolosEntrada];
+        //simbolosPila = new Character[numSimbolosPila];
     }
     
     public int getIndiceSimPila(char simbolo){
         for (int i = 0; i < simbolosPila.length; i++) {
-            if(simbolosPila[i].equals(simbolo)){
+            if(simbolosPila[i] != null && simbolosPila[i].equals(simbolo)){
                 return i;
             }
         }
@@ -44,16 +46,33 @@ public class Estado {
     
     public int getIndiceSimEntrada(char simbolo){
         for (int i = 0; i < simbolosEntrada.length; i++) {
-            if(simbolosEntrada[i].equals(simbolo)){
+            if(simbolosEntrada[i] != null && simbolosEntrada[i].equals(simbolo)){
                 return i;
             }
         }
         return -1;
     }
     
+    public void agregarTransicion(Transicion tr){
+        int indiceSimEntr = getIndiceSimEntrada(tr.simboloEntrada);
+        int indiceSimPila = getIndiceSimPila(tr.simboloPila);
+        transiciones[indiceSimPila][indiceSimEntr] = tr;
+    }
+    
     public Transicion getTransicion(char simboloEntrada, char simboloPila){
         int indiceSimEntr = getIndiceSimEntrada(simboloEntrada);
-        int indiceSimPila = getIndiceSimEntrada(simboloPila);
-        return(transiciones[indiceSimPila][indiceSimEntr]);
+        int indiceSimPila = getIndiceSimPila(simboloPila);
+        if(indiceSimEntr != -1 && indiceSimPila != -1){
+            return(transiciones[indiceSimPila][indiceSimEntr]);
+        }
+        return null;
+    }
+    
+    public void eliminarTransicion(Transicion tr){
+        int indiceSimEntr = getIndiceSimEntrada(tr.simboloEntrada);
+        int indiceSimPila = getIndiceSimPila(tr.simboloPila);
+        if(indiceSimEntr != -1 && indiceSimPila != -1){
+            transiciones[indiceSimPila][indiceSimEntr] = null;
+        }
     }
 }

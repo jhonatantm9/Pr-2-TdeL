@@ -61,6 +61,42 @@ public class AutomataPila {
         return null;
     }
     
+    public void inicializarEstados(ArrayList<Character> simbolosPila, ArrayList<Character> simbolosEntrada){
+        for (Estado estado : estados) {
+            estado.inicializarTransiciones(simbolosPila.size(), simbolosEntrada.size());
+            Character[] vecSimbolosPila = new Character[1];
+            vecSimbolosPila = simbolosPila.toArray(vecSimbolosPila);
+            Character[] vecSimbolosEntrada = new Character[1];
+            vecSimbolosEntrada = simbolosEntrada.toArray(vecSimbolosEntrada);
+            estado.simbolosEntrada = vecSimbolosEntrada;
+            estado.simbolosPila = vecSimbolosPila;
+        }
+    }
+    
+    public void agregarTransicion(String estado, Transicion transicion){
+        Estado e = getEstado(estado);
+        if(e != null){
+            e.agregarTransicion(transicion);
+        }
+    }
+    
+    public Transicion getTransicion(String estado, Transicion transicion){
+        Estado e = getEstado(estado);
+        return(e.getTransicion(transicion.simboloEntrada, transicion.simboloPila));
+    }
+    
+    public void eliminarTransicion(String estado, Transicion transicion){
+        Estado e = getEstado(estado);
+        if(e != null){
+            e.eliminarTransicion(transicion);
+        }
+    }
+    
+    /**
+     * Reconoce una cadena ingresada por el usuario
+     * @param cadena Hilera a reconocer
+     * @return true si la cadena es reconocida por el autómata, false de lo contrario
+     */
     public boolean reconocer(String cadena){
         char[] simbolo = cadena.toCharArray();
         Estado estadoActual = this.getEstadoInicial();
@@ -83,6 +119,13 @@ public class AutomataPila {
         return false;
     }
     
+    /**
+     * Realiza una operación de pila y en caso de ser necesario desapila el tope
+     * de la pila o apila uno o más elementos
+     * @param opPila Operación a realizar
+     * @param simboloAR Símbolo para la operación Apilar o símbolos para la
+     * operación Replace
+     */
     public void operarPila(String opPila, String simboloAR){
         if(opPila.equals("Desapilar")){
             pila.pop();
@@ -96,11 +139,24 @@ public class AutomataPila {
         }
     }
     
+    /**
+     * Realiza una operación de estado y retorna el nuevo estado donde se
+     * encontrará el reconocedor
+     * @param nombreEstado Nombre del estado siguiente
+     * @return Variable Estado con el nuevo estado actual
+     */
     public Estado operarEstado(String nombreEstado){
         Estado estado = getEstado(nombreEstado);
         return estado;
     }
     
+    /**
+     * Realiza una operación de entrada y retorna un booleano dependiendo de
+     * esta
+     * @param opEntrada Nombre de la operación
+     * @return true, si es necesario avanzar para reconocer el siguiente símbolo,
+     * false si la operación es retenga
+     */
     public boolean operarEntrada(String opEntrada){
         if(opEntrada.equals("Avance")){
             return true;
