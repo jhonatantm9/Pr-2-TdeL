@@ -5,7 +5,7 @@
  */
 package Vista;
 
-import Automata.Transicion;
+import Automata.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.table.DefaultTableModel;
@@ -16,9 +16,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ControladorTabla {
     
-    DefaultTableModel modeloTabla;
+    private DefaultTableModel modeloTabla;
     DefaultTableModel modeloPila;
-    int numEstados;
+    public int numEstados;
 
     public ControladorTabla() {
         modeloTabla = new DefaultTableModel();
@@ -120,13 +120,13 @@ public class ControladorTabla {
             modeloTabla.setValueAt(key, numFila, numColumna);
         }else{
             while(numFila < modeloTabla.getRowCount()){
-                if(modeloTabla.getValueAt(numFila, 0).equals(estado)){
+                if(estado.equals(modeloTabla.getValueAt(numFila, 0))){
                     break;
                 }
                 numFila++;
             }
             while(numFila < modeloTabla.getRowCount()){
-                if(modeloTabla.getValueAt(numFila, 0).equals(tr.simboloPila)){
+                if(tr.simboloPila.equals(modeloTabla.getValueAt(numFila, 0))){
                     break;
                 }
                 numFila++;
@@ -144,8 +144,100 @@ public class ControladorTabla {
     public String descripcionTransiciones(ArrayList<Transicion> transiciones){
         String descripcion = "A: Aceptación\n";
         for (int i = 0; i < transiciones.size(); i++) {
-            descripcion += ("#" + (i+1) + ": " + transiciones.toString() + "\n");
+            descripcion += ("#" + (i+1) + ": " + transiciones.get(i).toString() + "\n");
         }
         return descripcion;
     }
+    
+    public void actualizarTransicionesTabla(ArrayList<Transicion> transicionesGUI, AutomataPila ap) {
+        eliminarTransicionesTabla();
+        for (Estado estado : ap.getEstados()) {
+            String nombre = estado.nombre;
+            ArrayList<Transicion> transiciones = estado.getTransiciones();
+            for (int i = 0; i < transiciones.size(); i++) {
+                if (transiciones.get(i).esAceptacion) {
+                    agregarTransicionTabla(nombre, "A", transiciones.get(i));
+                } else {
+                    for (int j = 0; j < transicionesGUI.size(); j++) {
+                        if (transicionesGUI.get(j).equals(transiciones.get(i))) {
+                            agregarTransicionTabla(nombre, String.valueOf(j + 1), transiciones.get(i));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public void eliminarTransicionesTabla(){
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            for (int j = 1; j < modeloTabla.getColumnCount(); j++) {
+                modeloTabla.setValueAt(null, i, j);
+            }            
+        }    
+    }
+    
+    public void actualizarSimbolos(ArrayList<Character> simbolosEntrada, ArrayList<Character> simbolosPila, ArrayList<String> estados){
+        modeloTabla = new DefaultTableModel(); //Empezar la tabla desde cero
+        
+        Object[] simbolosEntVec = simbolosEntrada.toArray();
+        ArrayList<Object> columnas = new ArrayList();
+
+        columnas.add("S. PILA/S. ENTRADA");
+        for (int i = 0; i < simbolosEntrada.size(); i++) {
+            columnas.add(simbolosEntVec[i]);
+        }
+        modeloTabla.setColumnIdentifiers(columnas.toArray()); //Añadimos la cabecera de la tabla
+        
+        numEstados = estados.size();
+        //Se agregan los símbolos de la pila y nombres de estados si hay más de uno
+        if(estados.size() == 1){
+            for (Character simbolo : simbolosPila) {
+                ArrayList<Object> fila = new ArrayList<>();
+                fila.add(simbolo);
+                for (int i = 0; i < simbolosEntrada.size(); i++) {
+                    fila.add("");
+                }
+                modeloTabla.addRow(fila.toArray());
+            }
+        }else{
+            ArrayList<ArrayList<Object>> filas = new ArrayList<>();
+            for (Character simbolo : simbolosPila) {
+                ArrayList<Object> fila = new ArrayList<>();
+                fila.add(simbolo);
+                for (int i = 0; i < simbolosEntrada.size(); i++) {
+                    fila.add("");
+                }
+                filas.add(fila);
+            }
+            for(String estado: estados){
+                ArrayList<Object> fila = new ArrayList<>();
+                fila.add(estado);
+                for (int i = 0; i < simbolosEntrada.size(); i++) {
+                    fila.add("");
+                }
+                modeloTabla.addRow(fila.toArray());
+                for(ArrayList<Object> arrFila: filas){
+                    modeloTabla.addRow(arrFila.toArray());
+                }
+                modeloTabla.setRowCount(modeloTabla.getRowCount() + 1);
+            }
+            modeloTabla.removeRow(modeloTabla.getRowCount() - 1);
+        }
+    }
+    
+    public void actualizarTabla(ArrayList<Character> simbolosEntrada, ArrayList<Character> simbolosPila, ArrayList<Transicion> transiciones, AutomataPila ap){
+        ArrayList<Estado> estados = ap.getEstados();
+        ArrayList<String> nombresEstados = new ArrayList<>();
+        for (Estado estado : estados) {
+            nombresEstados.add(estado.nombre);
+        }
+        actualizarSimbolos(simbolosEntrada, simbolosPila, nombresEstados);
+        actualizarTransicionesTabla(transiciones, ap);
+    }
+
+    public DefaultTableModel getModeloTabla() {
+        return modeloTabla;
+    }
+    
+    
 }

@@ -56,7 +56,9 @@ public class Estado {
     public void agregarTransicion(Transicion tr){
         int indiceSimEntr = getIndiceSimEntrada(tr.simboloEntrada);
         int indiceSimPila = getIndiceSimPila(tr.simboloPila);
-        transiciones[indiceSimPila][indiceSimEntr] = tr;
+        if(indiceSimEntr != -1 && indiceSimPila != -1){
+            transiciones[indiceSimPila][indiceSimEntr] = tr;
+        }
     }
     
     public Transicion getTransicion(char simboloEntrada, char simboloPila){
@@ -75,4 +77,30 @@ public class Estado {
             transiciones[indiceSimPila][indiceSimEntr] = null;
         }
     }
+    
+    public ArrayList<Transicion> getTransiciones(){
+        ArrayList<Transicion> arrTransiciones = new ArrayList<>();
+        for (int i = 0; i < simbolosPila.length; i++) {
+            for (int j = 0; j < simbolosEntrada.length; j++) {
+                if(transiciones[i][j]!= null){
+                  arrTransiciones.add(transiciones[i][j]);
+                }
+            }   
+        }
+        return arrTransiciones;
+   }
+    
+    /*public void eliminarTransicionesConSimbolo(Character simbolo, boolean esEntrada){
+        if(esEntrada){
+            int indiceSimbolo = getIndiceSimEntrada(simbolo);
+            for (int i = 0; i < simbolosPila.length; i++) {
+                transiciones[i][indiceSimbolo] = null;
+            }
+        }else{
+            int indiceSimbolo = getIndiceSimPila(simbolo);
+            for (int i = 0; i < simbolosEntrada.length; i++) {
+                transiciones[indiceSimbolo][i] = null;
+            }
+        }
+    }*/
 }

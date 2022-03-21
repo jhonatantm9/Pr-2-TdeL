@@ -13,7 +13,7 @@ import java.util.Stack;
  * @author jhona
  */
 public class AutomataPila {
-    public ArrayList<Estado> estados;
+    private ArrayList<Estado> estados;
     private Estado estadoInicial;
     public static Stack<String> pila;
     
@@ -63,13 +63,17 @@ public class AutomataPila {
     
     public void inicializarEstados(ArrayList<Character> simbolosPila, ArrayList<Character> simbolosEntrada){
         for (Estado estado : estados) {
-            estado.inicializarTransiciones(simbolosPila.size(), simbolosEntrada.size());
-            Character[] vecSimbolosPila = new Character[1];
-            vecSimbolosPila = simbolosPila.toArray(vecSimbolosPila);
-            Character[] vecSimbolosEntrada = new Character[1];
-            vecSimbolosEntrada = simbolosEntrada.toArray(vecSimbolosEntrada);
-            estado.simbolosEntrada = vecSimbolosEntrada;
-            estado.simbolosPila = vecSimbolosPila;
+            if(estado.transiciones == null){
+                estado.inicializarTransiciones(simbolosPila.size(), simbolosEntrada.size());
+                Character[] vecSimbolosPila = new Character[1];
+                vecSimbolosPila = simbolosPila.toArray(vecSimbolosPila);
+                Character[] vecSimbolosEntrada = new Character[1];
+                vecSimbolosEntrada = simbolosEntrada.toArray(vecSimbolosEntrada);
+                estado.simbolosEntrada = vecSimbolosEntrada;
+                estado.simbolosPila = vecSimbolosPila;
+            }else{
+                reorganizarEstado(estado, simbolosPila, simbolosEntrada);
+            }
         }
     }
     
@@ -85,10 +89,31 @@ public class AutomataPila {
         return(e.getTransicion(transicion.simboloEntrada, transicion.simboloPila));
     }
     
+    public Transicion getTransicion(String estado, Character simboloPila, Character simboloEntrada){
+        Estado e = getEstado(estado);
+        return(e.getTransicion(simboloEntrada, simboloPila));
+    }
+    
     public void eliminarTransicion(String estado, Transicion transicion){
         Estado e = getEstado(estado);
         if(e != null){
             e.eliminarTransicion(transicion);
+        }
+    }
+    
+    public void reorganizarEstado(Estado estado, ArrayList<Character> simbolosPila, ArrayList<Character> simbolosEntrada){
+        ArrayList<Transicion> transiciones = estado.getTransiciones();
+        
+        estado.inicializarTransiciones(simbolosPila.size(), simbolosEntrada.size());
+        Character[] vecSimbolosPila = new Character[1];
+        vecSimbolosPila = simbolosPila.toArray(vecSimbolosPila);
+        Character[] vecSimbolosEntrada = new Character[1];
+        vecSimbolosEntrada = simbolosEntrada.toArray(vecSimbolosEntrada);
+        estado.simbolosEntrada = vecSimbolosEntrada;
+        estado.simbolosPila = vecSimbolosPila;
+        
+        for (Transicion tr : transiciones) {
+            estado.agregarTransicion(tr);
         }
     }
     
@@ -162,5 +187,9 @@ public class AutomataPila {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<Estado> getEstados() {
+        return estados;
     }
 }

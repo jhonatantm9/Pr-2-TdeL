@@ -65,11 +65,11 @@ public class TransicionComun extends Transicion{
     @Override
     public String toString() {
         if(operacionPila.equals("Replace")){
-            return(operacionPila + ", " + operacionEstado + ", Replace(" + operacionEntrada + ")");
+            return("Replace(" + simboloAR + "), " + operacionEstado + ", " + operacionEntrada);
         }if(operacionPila.equals("Apilar")){
-            return(operacionPila + ", " + operacionEstado + ", Apile(" + operacionEntrada + ")");
+            return("Apile(" + simboloAR + "), " + operacionEstado + ", " + operacionEntrada);
         }if(operacionPila.equals("Ninguna")){
-            return(operacionPila + ", " + operacionEstado);
+            return(operacionEstado + ", " + operacionEntrada);
         }
         return(operacionPila + ", " + operacionEstado + ", " + operacionEntrada);
     }

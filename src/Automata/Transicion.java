@@ -13,10 +13,18 @@ public class Transicion {
     public boolean esAceptacion;
     public Character simboloPila;
     public Character simboloEntrada;
+    public String estado;
 
     public Transicion(char simboloPila, char simboloEntrada) {
         this.simboloPila = simboloPila;
         this.simboloEntrada = simboloEntrada;
     }
+
+    public Transicion(Character simboloPila, Character simboloEntrada, String estado) {
+        this.simboloPila = simboloPila;
+        this.simboloEntrada = simboloEntrada;
+        this.estado = estado;
+    }
+    
     
 }
