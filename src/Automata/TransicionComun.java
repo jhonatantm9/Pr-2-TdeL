@@ -8,7 +8,9 @@ package Automata;
 import java.util.Objects;
 
 /**
- *
+ * Clase de las transiciones que no son de aceptación. Tienen tres operaciones
+ * habituales de una transición (en pila, de estado y de entrada) y un String que
+ * define los caracteres que se usan cuando la operación es Apilar o Replace
  * @author jhona
  */
 public class TransicionComun extends Transicion{

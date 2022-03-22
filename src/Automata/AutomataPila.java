@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 /**
- *
+ * Clase que tiene el automata de pila con los estados y transiciones de estos.
+ * Tiene una pila para hacer el reconocimiento de una hilera de entrada, una
+ * variable con el estado inicial y otra que guarda el estado en que se encuentra
+ * el reconocedor cuando se hace un reconocimiento paso a paso
  * @author jhona
  */
 public class AutomataPila {
@@ -53,6 +56,11 @@ public class AutomataPila {
         return estadoInicial;
     }
     
+    /**
+     * Retorna una variable con el estado pedido
+     * @param nombreEstado String con el nombre del estado
+     * @return Variable de tipo Estado con el estado o null en caso de que no exista
+     */
     public Estado getEstado(String nombreEstado){
         for (Estado estado : estados) {
             if(estado.nombre.equals(nombreEstado)){
@@ -62,6 +70,14 @@ public class AutomataPila {
         return null;
     }
     
+    /**
+     * Inicializa todos los estados del autómata, dándoles los símbolos de pila
+     * y de entrada de este. En caso de que haya algún estado ya inicializado,
+     * se actualizan sus símbolos de entrada, pila y el tamañño de la matriz
+     * de transiciones
+     * @param simbolosPila Simbolos de pila del AP
+     * @param simbolosEntrada Simbolos de entrada del AP
+     */
     public void inicializarEstados(ArrayList<Character> simbolosPila, ArrayList<Character> simbolosEntrada){
         for (Estado estado : estados) {
             if(estado.transiciones == null){
@@ -102,6 +118,13 @@ public class AutomataPila {
         }
     }
     
+    /**
+     * Actualiza un estado para que tenga los símbolos de pila y entrada dados
+     * en caso de que haya ocurrido un cambio en el autómata
+     * @param estado Nombre del estado a reorganizar o actualizar
+     * @param simbolosPila Símbolos de pila del AP
+     * @param simbolosEntrada Simbolos de entrada del AP
+     */
     public void reorganizarEstado(Estado estado, ArrayList<Character> simbolosPila, ArrayList<Character> simbolosEntrada){
         ArrayList<Transicion> transiciones = estado.getTransiciones();
         
@@ -197,6 +220,14 @@ public class AutomataPila {
         return false;
     }
     
+    /**
+     * Verifica si una operación de reconocimiento para un símbolo específico
+     * genera una acción de rechazo. Este método se usa especificamente en el 
+     * reconocimiento paso a paso
+     * @param simboloEntrada Símbolo ingresado
+     * @param nombreEstado Nombre del estado
+     * @return true si la operación del símbolo no genera rechazo, false de lo contrario
+     */
     public boolean reconocerSimbolo(Character simboloEntrada, String nombreEstado){
         Character simboloPila;
         if(pila.empty()){

@@ -11,7 +11,8 @@ import java.util.Hashtable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Controla las tablas del autómata y la pila, junto con la descripción de las
+ * transiciones en el GUIPrincipal
  * @author jhona
  */
 public class ControladorTabla {
@@ -84,6 +85,12 @@ public class ControladorTabla {
         return modeloTabla;
     }
     
+    /**
+     * Modifica la pila (el modelo de esta) para que aparezcan los símbolos que
+     * se encuentran en ella en caso de hacer un reconocimiento paso a paso.
+     * También la modifica cada vez que se cambie la configuración inicial de la pila
+     * @return Modelo con la nueva tabla de la pila
+     */
     public DefaultTableModel actualizarPila(){
         modeloPila = new DefaultTableModel(15, 1);
         Object[] encabezado = {"Pila"};
@@ -101,6 +108,12 @@ public class ControladorTabla {
         return modeloPila;
     }
     
+    /**
+     * Agrega una transición al modelo con la tabla del autómata
+     * @param estado Estado en el que se agrega la transición
+     * @param key Número de la transición
+     * @param tr Transición a añadir
+     */
     public void agregarTransicionTabla(String estado, String key, Transicion tr){
         int numFila = 0;
         int numColumna = 0;
@@ -141,6 +154,13 @@ public class ControladorTabla {
         }
     }
     
+    /**
+     * Retorna la descripción de cada transición identificándolas con su número
+     * (o la "A" en caso de aceptación) y las operaciones que realizan
+     * @param transiciones Conjunto de transiciones
+     * @return String con todas las descripciones listas para escribirse en la
+     * ventana principal
+     */
     public String descripcionTransiciones(ArrayList<Transicion> transiciones){
         String descripcion = "A: Aceptación\n";
         for (int i = 0; i < transiciones.size(); i++) {
@@ -149,6 +169,11 @@ public class ControladorTabla {
         return descripcion;
     }
     
+    /**
+     * Actualiza las transiciones que aparecen en el modelo de la tabla del AP
+     * @param transicionesGUI Transiciones enviadas desde la GUIPrincipal
+     * @param ap Automata de pila
+     */
     public void actualizarTransicionesTabla(ArrayList<Transicion> transicionesGUI, AutomataPila ap) {
         eliminarTransicionesTabla();
         for (Estado estado : ap.getEstados()) {
@@ -168,6 +193,9 @@ public class ControladorTabla {
         }
     }
     
+    /**
+     * Elimina todas las transiciones del modelo que representa el AP
+     */
     public void eliminarTransicionesTabla(){
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             for (int j = 1; j < modeloTabla.getColumnCount(); j++) {
@@ -176,6 +204,13 @@ public class ControladorTabla {
         }    
     }
     
+    /**
+     * Actualiza los símbolos del modelo del AP en caso de que hayan ocurrido 
+     * cambios en estos
+     * @param simbolosEntrada Simbolos de entrada del AP
+     * @param simbolosPila Simbolos de pila del AP
+     * @param estados Estados del AP
+     */
     public void actualizarSimbolos(ArrayList<Character> simbolosEntrada, ArrayList<Character> simbolosPila, ArrayList<String> estados){
         modeloTabla = new DefaultTableModel(); //Empezar la tabla desde cero
         
@@ -225,6 +260,14 @@ public class ControladorTabla {
         }
     }
     
+    /**
+     * Actualiza la tabla (el modelo) del AP cuando ocurra una modificación en este
+     * Llama a los métodos de actualizarSimbolos y actualizarTransicionesTabla
+     * @param simbolosEntrada
+     * @param simbolosPila
+     * @param transiciones
+     * @param ap 
+     */
     public void actualizarTabla(ArrayList<Character> simbolosEntrada, ArrayList<Character> simbolosPila, ArrayList<Transicion> transiciones, AutomataPila ap){
         ArrayList<Estado> estados = ap.getEstados();
         ArrayList<String> nombresEstados = new ArrayList<>();

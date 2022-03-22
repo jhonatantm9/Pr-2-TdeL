@@ -11,7 +11,7 @@ import java.util.Hashtable;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Ventana principal del AP. Aqui el usuario interactúa con todo el programa
  * @author jhona
  */
 public class GUIPrincipal extends javax.swing.JFrame {
@@ -114,6 +114,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
         return(simbolos);
     }
     
+    /**
+     * Agrega una transición ingresada por el usuario al automata de pila y la
+     * envía a la parte gráfica para ser representada
+     * @param estado Estado en el que estará la transición
+     * @param tr Transición a agregar
+     */
     public void agregarTransicion(String estado, Transicion tr){
         if(ap.getTransicion(estado, tr) == null){//Transición inexistente
             ap.agregarTransicion(estado, tr);
@@ -150,6 +156,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Elimina una transición dada por el usuario del automata de pila y la
+     * envía a la parte gráfica para ser eliminada
+     * @param estado Estado en el que está la transición
+     * @param simboloPila Simbolo de pila correspondiente a la transición
+     * @param simboloEntrada Simbolo de entrada correspondiente a la transición
+     * @return 
+     */
     public boolean eliminarTransicion(String estado, Character simboloPila, Character simboloEntrada){
         Transicion tr = ap.getTransicion(estado, simboloPila, simboloEntrada);
         if(tr != null){
@@ -176,6 +190,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
         return false;
     }
     
+    /**
+     * Elimina una transición del contador que almacena los id (números de cada
+     * transición) y reacomoda el resto de los índices
+     * @param keyInt Número de la transición a eliminar
+     */
     public void eliminatTransicionDeContador(int keyInt){
         int keyNuevaInt = keyInt;
         String keyAntiguaStr = String.valueOf(keyInt + 1);
@@ -194,6 +213,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
         contadorTransiciones.remove(keyAntiguaStr);
     }
     
+    /**
+     * Elimina todas las transiciónes que contengan el símbolo indicado
+     * @param simbolo Símbolo de las transiciones a borrar
+     * @param esSimboloDeEntrada Este parámetro indica si el símbolo dado corresponde
+     * a uno de entrada (true) o si es un símbolo en la pila (false)
+     */
     public void eliminarTransicionesConSimbolo(Character simbolo, boolean esSimboloDeEntrada){
         if(esSimboloDeEntrada){
             for (String estado : estados) {
@@ -210,6 +235,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Reinicia la pila del autómata y en la parte gráfica
+     */
     public void reiniciarPila(){
         AutomataPila.pila.removeAllElements();
         for(Character c: configInicialPila){
@@ -810,6 +838,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonTrAceptacion.doClick();
             }else{
                 if(comboOpEntradaTr.getSelectedIndex() != 0 && comboOpEstadoTr.getSelectedIndex() != 0 && comboOpPilaTr.getSelectedIndex() != 0){
+                    if(simboloPila == '▼' && (comboOpPilaTr.getSelectedIndex() == 2 || comboOpPilaTr.getSelectedIndex() == 4)){
+                        JOptionPane.showMessageDialog(rootPane, "NO SE PUEDE REALIZAR LA OPERACIÓN REPLACE O APILAR CUANDO EL"
+                         + "SIMBOLO EN LA PILA ES '▼'", "ERROR EN LA TRANSICIÓN", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     String opEntrada = comboOpEntradaTr.getSelectedItem().toString();
                     String opPila = comboOpPilaTr.getSelectedItem().toString();
                     String opEstado = comboOpEstadoTr.getSelectedItem().toString();
@@ -1023,6 +1056,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
         botonConfirmarAP.setEnabled(b);
     }
     
+    /**
+     * Activa o desactiva los controles que están en la parte del reconocedor
+     * en donde el usuario ingresa una hilera para ser leída. También reinicia
+     * los labels y cajas de texto
+     * @param b true para activar, false para desactivar
+     */
     public void cambiarEstadoBotones3(boolean b){
         textCadenaEntrada.setEditable(b);
         botonReconocer.setEnabled(b);
@@ -1035,6 +1074,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
         textCadenaEntrada.setEditable(b);
     }
     
+    /**
+     * Reinicia los botones, labels y cajas de texto de la parte gráfica del
+     * reconocedor
+     */
     public void terminarReconocedor(){
         textCadenaLeida.setText("");
         textEstadoActual.setText("");
@@ -1045,6 +1088,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
         botonReconocer.setEnabled(false);
     }
     
+    /**
+     * Cambia el reconocedor para que se pueda ingresar una nueva hilera a reconocer
+     * luego de un reconocimiento paso a paso
+     */
     public void cambiarIniciarAReiniciar(){
         botonIniciar.setText("Reiniciar");
         botonIniciar.setEnabled(true);

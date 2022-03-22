@@ -6,7 +6,8 @@
 package Automata;
 
 /**
- *
+ * Clase de las transiciones que definen cuando la operación del autómata debe
+ * ser Acepte
  * @author jhona
  */
 public class TransicionAceptacion extends Transicion{

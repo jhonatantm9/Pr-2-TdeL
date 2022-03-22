@@ -8,7 +8,10 @@ package Automata;
 import java.util.ArrayList;
 
 /**
- *
+ * Clase que define los estados que tiene un autómata. Tiene una matriz con las
+ * transiciones pertenecientes al estado, dos vectores que definen los símbolos 
+ * de entrada y pila y que son usados para algunas operaciones y el nombre del
+ * estado
  * @author jhona
  */
 public class Estado {
@@ -29,10 +32,14 @@ public class Estado {
         simbolosPila = arrSimbolosEntrada.toArray(simbolosPila);
     }
     
+    /**
+     * Inicializa la matriz de transiciones con el número de símbolos de pila
+     * y entrada dados
+     * @param numSimbolosPila
+     * @param numSimbolosEntrada 
+     */
     public void inicializarTransiciones(int numSimbolosPila, int numSimbolosEntrada){
         transiciones = new Transicion[numSimbolosPila][numSimbolosEntrada];
-        //simbolosEntrada = new Character[numSimbolosEntrada];
-        //simbolosPila = new Character[numSimbolosPila];
     }
     
     public int getIndiceSimPila(char simbolo){
@@ -53,6 +60,10 @@ public class Estado {
         return -1;
     }
     
+    /**
+     * Agrega una transicion al estado
+     * @param tr Transicion a agregar
+     */
     public void agregarTransicion(Transicion tr){
         int indiceSimEntr = getIndiceSimEntrada(tr.simboloEntrada);
         int indiceSimPila = getIndiceSimPila(tr.simboloPila);
@@ -61,6 +72,12 @@ public class Estado {
         }
     }
     
+    /**
+     * Retorna la transicion que coincide con los símbolos de entrada y pila dados
+     * @param simboloEntrada Simbolo de entrada de la transición
+     * @param simboloPila Simbolo de pila de la transición
+     * @return Transicion pedida o null en caso de que no exista
+     */
     public Transicion getTransicion(char simboloEntrada, char simboloPila){
         int indiceSimEntr = getIndiceSimEntrada(simboloEntrada);
         int indiceSimPila = getIndiceSimPila(simboloPila);
@@ -70,6 +87,10 @@ public class Estado {
         return null;
     }
     
+    /**
+     * Elimina una transición del estado en caso de que exista
+     * @param tr Transición a eliminar
+     */
     public void eliminarTransicion(Transicion tr){
         int indiceSimEntr = getIndiceSimEntrada(tr.simboloEntrada);
         int indiceSimPila = getIndiceSimPila(tr.simboloPila);
@@ -78,6 +99,10 @@ public class Estado {
         }
     }
     
+    /**
+     * Devuelve un ArrayList con todas las transiciones de este estado
+     * @return ArrayList con las transiciones del estado
+     */
     public ArrayList<Transicion> getTransiciones(){
         ArrayList<Transicion> arrTransiciones = new ArrayList<>();
         for (int i = 0; i < simbolosPila.length; i++) {
@@ -89,18 +114,4 @@ public class Estado {
         }
         return arrTransiciones;
    }
-    
-    /*public void eliminarTransicionesConSimbolo(Character simbolo, boolean esEntrada){
-        if(esEntrada){
-            int indiceSimbolo = getIndiceSimEntrada(simbolo);
-            for (int i = 0; i < simbolosPila.length; i++) {
-                transiciones[i][indiceSimbolo] = null;
-            }
-        }else{
-            int indiceSimbolo = getIndiceSimPila(simbolo);
-            for (int i = 0; i < simbolosEntrada.length; i++) {
-                transiciones[indiceSimbolo][i] = null;
-            }
-        }
-    }*/
 }
