@@ -33,6 +33,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         cambiarEstadoBotones2(false); 
+        cambiarEstadoBotones3(false);
+        
         botonConfirmarAP.setEnabled(false);
         simbolosEntrada.add('¬');
         simbolosPila.add('▼');
@@ -142,7 +144,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             }
             textDescripcionTr.setText(controladorTabla.descripcionTransiciones(transiciones));
         }else{//Transicion existente
-            JOptionPane.showMessageDialog(this, "YA EXISTE UNA TRANSICIÓN EN EL ESTADO DADO SON LOS SÍMBOLOS DE PILA"
+            JOptionPane.showMessageDialog(this, "YA EXISTE UNA TRANSICIÓN EN EL ESTADO DADO CON LOS SÍMBOLOS DE PILA"
                     + " Y ENTRADA DADOS\nSI DESEA REEMPLAZARLA PRIMERO ELIMINE LA EXISTENTE", "ERROR TRANSICIÓN NO AGREGADA",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -159,7 +161,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     if(tr.equals(transiciones.get(i))){
                         if(contadorTransiciones.get(String.valueOf(i+1)) == 1){
                             eliminatTransicionDeContador(i+1);
-                            transiciones.remove(i);
+                            transiciones.remove((int)i);
                         }else{
                             contadorTransiciones.replace(String.valueOf(i+1), contadorTransiciones.get(String.valueOf(i+1)) - 1);
                         }
@@ -206,6 +208,17 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 }
             }
         }
+    }
+    
+    public void reiniciarPila(){
+        AutomataPila.pila.removeAllElements();
+        for(Character c: configInicialPila){
+            if(c == '▼'){
+                continue;
+            }
+            AutomataPila.pila.add(c.toString());
+        }
+        tablaPila.setModel(controladorTabla.actualizarPila());
     }
 
     /**
@@ -269,13 +282,16 @@ public class GUIPrincipal extends javax.swing.JFrame {
         textEstadoActual = new javax.swing.JTextField();
         textSimboloActual = new javax.swing.JTextField();
         botonIniciar = new javax.swing.JButton();
-        labelFin = new javax.swing.JLabel();
-        labelResultado = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         textCadenaLeida = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        labelTransicionUsada = new javax.swing.JLabel();
+        jLabelFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("<Automatas de Pila>");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         botonEliminarSimboloEntrada.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonEliminarSimboloEntrada.setText("Eliminar");
@@ -284,6 +300,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEliminarSimboloEntradaActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEliminarSimboloEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 49, -1, -1));
 
         botonEliminarEstado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonEliminarEstado.setText("Eliminar");
@@ -292,6 +309,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEliminarEstadoActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEliminarEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 116, -1, -1));
 
         botonAddEstado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonAddEstado.setText("Añadir");
@@ -300,14 +318,17 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonAddEstadoActionPerformed(evt);
             }
         });
+        getContentPane().add(botonAddEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 116, -1, -1));
 
         textEstado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         textEstado.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         textEstado.setText("S0");
+        getContentPane().add(textEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 117, 59, -1));
 
         textSimboloEntrada.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         textSimboloEntrada.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         textSimboloEntrada.setText("0");
+        getContentPane().add(textSimboloEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 59, -1));
 
         botonAddSimboloEntrada.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonAddSimboloEntrada.setText("Añadir");
@@ -316,18 +337,23 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonAddSimboloEntradaActionPerformed(evt);
             }
         });
+        getContentPane().add(botonAddSimboloEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 49, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("1) Definir símbolos de entrada:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 26, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("2) Definir conjunto de estados:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 81, -1, -1));
 
         labelEstadoI.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelEstadoI.setText("Estado inicial: NO SELECCIONADO");
+        getContentPane().add(labelEstadoI, new org.netbeans.lib.awtextra.AbsoluteConstraints(225, 271, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("4) Definir estado inicial:");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 271, -1, -1));
 
         comboEstadoI.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboEstadoI.addActionListener(new java.awt.event.ActionListener() {
@@ -335,9 +361,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 comboEstadoIActionPerformed(evt);
             }
         });
+        getContentPane().add(comboEstadoI, new org.netbeans.lib.awtextra.AbsoluteConstraints(153, 268, 63, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("3) Definir símbolos en la pila:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 147, -1, -1));
 
         botonEliminarSimboloPila.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonEliminarSimboloPila.setText("Eliminar");
@@ -346,6 +374,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEliminarSimboloPilaActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEliminarSimboloPila, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 182, -1, -1));
 
         botonAddSimboloPila.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonAddSimboloPila.setText("Añadir");
@@ -354,10 +383,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonAddSimboloPilaActionPerformed(evt);
             }
         });
+        getContentPane().add(botonAddSimboloPila, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 182, -1, -1));
 
         textSimboloPila.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         textSimboloPila.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         textSimboloPila.setText("0");
+        getContentPane().add(textSimboloPila, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 183, 59, -1));
 
         tablaPila.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tablaPila.setModel(new javax.swing.table.DefaultTableModel(
@@ -396,8 +427,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
             tablaPila.getColumnModel().getColumn(0).setResizable(false);
         }
 
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(958, 24, 81, 272));
+
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("5) Definir configuración inicial de la pila:");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 304, -1, -1));
 
         comboConfig.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboConfig.addActionListener(new java.awt.event.ActionListener() {
@@ -405,6 +439,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 comboConfigActionPerformed(evt);
             }
         });
+        getContentPane().add(comboConfig, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 333, 63, -1));
 
         botonEliminarConfig.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonEliminarConfig.setText("Eliminar cima");
@@ -413,6 +448,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEliminarConfigActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEliminarConfig, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 332, -1, -1));
 
         botonAddConfig.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonAddConfig.setText("Añadir");
@@ -421,18 +457,23 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonAddConfigActionPerformed(evt);
             }
         });
+        getContentPane().add(botonAddConfig, new org.netbeans.lib.awtextra.AbsoluteConstraints(79, 332, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel9.setText("6) Definir transiciones:");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 375, -1, -1));
 
         comboSimPilaTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboSimPilaTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Simbolo pila", "▼" }));
+        getContentPane().add(comboSimPilaTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 404, -1, -1));
 
         comboEstadoTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboEstadoTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado" }));
+        getContentPane().add(comboEstadoTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 404, -1, -1));
 
         comboSimEntTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboSimEntTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Simbolo entrada", "¬" }));
+        getContentPane().add(comboSimEntTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(191, 404, -1, -1));
 
         comboOpPilaTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboOpPilaTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Op pila", "Apilar", "Desapilar", "Ninguna", "Replace" }));
@@ -441,12 +482,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 comboOpPilaTrActionPerformed(evt);
             }
         });
+        getContentPane().add(comboOpPilaTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 447, -1, -1));
 
         comboOpEstadoTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboOpEstadoTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Op estado", "Ninguna" }));
+        getContentPane().add(comboOpEstadoTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(98, 447, -1, -1));
 
         comboOpEntradaTr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         comboOpEntradaTr.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Op entrada", "Avance", "Retenga" }));
+        getContentPane().add(comboOpEntradaTr, new org.netbeans.lib.awtextra.AbsoluteConstraints(195, 447, -1, -1));
 
         botonEliminarTransicion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonEliminarTransicion.setText("Eliminar transición");
@@ -455,6 +499,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEliminarTransicionActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEliminarTransicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(161, 530, -1, -1));
 
         botonAddTransicion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonAddTransicion.setText("Añadir transición");
@@ -463,6 +508,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonAddTransicionActionPerformed(evt);
             }
         });
+        getContentPane().add(botonAddTransicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 530, -1, -1));
 
         botonConfirmarAP.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         botonConfirmarAP.setText("Confirmar autómata");
@@ -471,6 +517,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonConfirmarAPActionPerformed(evt);
             }
         });
+        getContentPane().add(botonConfirmarAP, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 573, -1, -1));
 
         botonEditarAP.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         botonEditarAP.setText("Editar automata");
@@ -479,6 +526,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonEditarAPActionPerformed(evt);
             }
         });
+        getContentPane().add(botonEditarAP, new org.netbeans.lib.awtextra.AbsoluteConstraints(179, 573, -1, -1));
 
         tablaTransiciones.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tablaTransiciones.setModel(new javax.swing.table.DefaultTableModel(
@@ -510,6 +558,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
             tablaTransiciones.getColumnModel().getColumn(3).setResizable(false);
         }
 
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(534, 24, 391, 272));
+
         botonConfirmar1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonConfirmar1.setText("Confirmar símbolos y estados");
         botonConfirmar1.addActionListener(new java.awt.event.ActionListener() {
@@ -517,21 +567,27 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonConfirmar1ActionPerformed(evt);
             }
         });
+        getContentPane().add(botonConfirmar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 225, -1, -1));
 
         textEntradaAR.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         textEntradaAR.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        getContentPane().add(textEntradaAR, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 489, 69, -1));
 
         labelSimbolosEntrada.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelSimbolosEntrada.setText("Símbolos de entrada: ¬");
+        getContentPane().add(labelSimbolosEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(241, 53, -1, -1));
 
         labelEstados.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelEstados.setText("Estados: ");
+        getContentPane().add(labelEstados, new org.netbeans.lib.awtextra.AbsoluteConstraints(241, 120, -1, -1));
 
         labelSimbolosPila.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelSimbolosPila.setText("Símbolos en la pila: ▼");
+        getContentPane().add(labelSimbolosPila, new org.netbeans.lib.awtextra.AbsoluteConstraints(241, 186, -1, -1));
 
         labelConfig.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelConfig.setText("Config. inicial: ▼");
+        getContentPane().add(labelConfig, new org.netbeans.lib.awtextra.AbsoluteConstraints(277, 336, -1, -1));
 
         botonTrAceptacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonTrAceptacion.setText("Aceptación");
@@ -540,6 +596,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonTrAceptacionActionPerformed(evt);
             }
         });
+        getContentPane().add(botonTrAceptacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(328, 403, -1, -1));
 
         textDescripcionTr.setEditable(false);
         textDescripcionTr.setColumns(20);
@@ -547,8 +604,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
         textDescripcionTr.setRows(5);
         jScrollPane3.setViewportView(textDescripcionTr);
 
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(534, 321, 391, 105));
+
         textCadenaEntrada.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         textCadenaEntrada.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        getContentPane().add(textCadenaEntrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(535, 445, 124, -1));
 
         botonReconocer.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         botonReconocer.setText("Reconocer");
@@ -557,9 +617,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonReconocerActionPerformed(evt);
             }
         });
+        getContentPane().add(botonReconocer, new org.netbeans.lib.awtextra.AbsoluteConstraints(677, 444, -1, -1));
 
         jLabel15.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         jLabel15.setText("Estado actual");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(535, 515, -1, -1));
 
         botonSiguiente.setText("Siguiente");
         botonSiguiente.setEnabled(false);
@@ -568,15 +630,17 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonSiguienteActionPerformed(evt);
             }
         });
+        getContentPane().add(botonSiguiente, new org.netbeans.lib.awtextra.AbsoluteConstraints(988, 514, -1, -1));
 
         jLabel16.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         jLabel16.setText("Símbolo a leer");
+        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(809, 515, -1, -1));
 
         textEstadoActual.setEditable(false);
-        textEstadoActual.setEnabled(false);
+        getContentPane().add(textEstadoActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(638, 515, 58, -1));
 
         textSimboloActual.setEditable(false);
-        textSimboloActual.setEnabled(false);
+        getContentPane().add(textSimboloActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(912, 515, 58, -1));
 
         botonIniciar.setText("Iniciar");
         botonIniciar.addActionListener(new java.awt.event.ActionListener() {
@@ -584,271 +648,30 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 botonIniciarActionPerformed(evt);
             }
         });
+        getContentPane().add(botonIniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(714, 514, 77, -1));
 
-        labelFin.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
-        labelFin.setText("FIN DE CADENA");
-
-        labelResultado.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
-        labelResultado.setText("RECONOCIDA");
-
-        jLabel14.setFont(new java.awt.Font("Rockwell", 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Rockwell", 1, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(51, 0, 51));
         jLabel14.setText("Simular paso a paso");
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(535, 490, -1, -1));
 
         jLabel17.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         jLabel17.setText("Cadena leída");
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(534, 580, -1, -1));
 
         textCadenaLeida.setEditable(false);
-        textCadenaLeida.setEnabled(false);
+        getContentPane().add(textCadenaLeida, new org.netbeans.lib.awtextra.AbsoluteConstraints(638, 580, 153, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textSimboloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonAddSimboloEntrada)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonEliminarSimboloEntrada)
-                                .addGap(10, 10, 10)
-                                .addComponent(labelSimbolosEntrada))
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonAddEstado)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonEliminarEstado)
-                                .addGap(10, 10, 10)
-                                .addComponent(labelEstados))
-                            .addComponent(jLabel4)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textSimboloPila, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonAddSimboloPila)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonEliminarSimboloPila)
-                                .addGap(10, 10, 10)
-                                .addComponent(labelSimbolosPila))
-                            .addComponent(botonConfirmar1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(4, 4, 4)
-                                .addComponent(comboEstadoI, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(9, 9, 9)
-                                .addComponent(labelEstadoI)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonAddConfig)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonEliminarConfig)
-                                .addGap(10, 10, 10)
-                                .addComponent(labelConfig))
-                            .addComponent(jLabel9)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboEstadoTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(comboSimPilaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(comboSimEntTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonTrAceptacion))
-                            .addComponent(jLabel8)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboOpPilaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(comboOpEstadoTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(comboOpEntradaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(textEntradaAR, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(botonAddTransicion)
-                                .addGap(18, 18, 18)
-                                .addComponent(botonEliminarTransicion))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(botonConfirmarAP)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonEditarAP)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel17)
-                                .addGap(18, 18, 18)
-                                .addComponent(textCadenaLeida, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(textCadenaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(botonReconocer))
-                                    .addComponent(jLabel14)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel15)
-                                            .addComponent(jLabel16))
-                                        .addGap(10, 10, 10)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(textEstadoActual, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(textSimboloActual, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(botonIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(botonSiguiente))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(labelFin)
-                                            .addComponent(labelResultado))))))))
-                .addGap(21, 21, 21))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(textSimboloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonAddSimboloEntrada)
-                            .addComponent(botonEliminarSimboloEntrada)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(labelSimbolosEntrada)))
-                        .addGap(7, 7, 7)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(textEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonAddEstado)
-                            .addComponent(botonEliminarEstado)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(labelEstados)))
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(textSimboloPila, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonAddSimboloPila)
-                            .addComponent(botonEliminarSimboloPila)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(labelSimbolosPila)))
-                        .addGap(18, 18, 18)
-                        .addComponent(botonConfirmar1)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboEstadoI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(labelEstadoI)))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addComponent(jLabel8)
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(comboConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonAddConfig)
-                            .addComponent(botonEliminarConfig)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(labelConfig)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel9)
-                        .addGap(11, 11, 11)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonTrAceptacion)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboEstadoTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboSimPilaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboSimEntTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botonReconocer)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboOpPilaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboOpEstadoTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboOpEntradaTr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textCadenaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textEntradaAR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel14)))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(botonIniciar)
-                                .addGap(6, 6, 6)
-                                .addComponent(botonSiguiente))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel15)
-                                        .addGap(11, 11, 11)
-                                        .addComponent(jLabel16))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(textEstadoActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(9, 9, 9)
-                                        .addComponent(textSimboloActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelFin)
-                                        .addGap(11, 11, 11)
-                                        .addComponent(labelResultado)))))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel17)
-                            .addComponent(textCadenaLeida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonAddTransicion)
-                            .addComponent(botonEliminarTransicion))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonConfirmarAP)
-                            .addComponent(botonEditarAP))))
-                .addContainerGap(26, Short.MAX_VALUE))
-        );
+        jLabel18.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
+        jLabel18.setText("Transición usada:");
+        getContentPane().add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(534, 548, -1, -1));
+
+        labelTransicionUsada.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
+        labelTransicionUsada.setText("|");
+        getContentPane().add(labelTransicionUsada, new org.netbeans.lib.awtextra.AbsoluteConstraints(655, 548, -1, -1));
+
+        jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondo3.png"))); // NOI18N
+        getContentPane().add(jLabelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 620));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -863,6 +686,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             this.simbolosEntrada.remove((Character)textSimboloEntrada.getText().trim().charAt(0));
             comboSimEntTr.removeItem(textSimboloEntrada.getText());
             comboConfig.removeItem(textSimboloEntrada.getText());
+            eliminarTransicionesConSimbolo(textSimboloEntrada.getText().trim().charAt(0), true);
             labelSimbolosEntrada.setText("Símbolos de entrada: " + getSimbolosSeparados(simbolosEntrada));
         }
     }//GEN-LAST:event_botonEliminarSimboloEntradaActionPerformed
@@ -916,6 +740,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
             }            
             this.simbolosPila.remove((Character)textSimboloPila.getText().trim().charAt(0));
             comboSimPilaTr.removeItem(textSimboloPila.getText());
+            comboConfig.removeItem(textSimboloPila.getText());
+            eliminarTransicionesConSimbolo(textSimboloEntrada.getText().trim().charAt(0), false);
+            while(configInicialPila.contains(textSimboloPila.getText().trim().charAt(0))){
+                configInicialPila.remove((Character)textSimboloPila.getText().trim().charAt(0));
+            }
+            reiniciarPila();
             labelSimbolosPila.setText("Símbolos en la pila: " + getSimbolosSeparados(simbolosPila));
         }
     }//GEN-LAST:event_botonEliminarSimboloPilaActionPerformed
@@ -951,9 +781,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
     private void comboOpPilaTrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboOpPilaTrActionPerformed
         if(comboOpPilaTr.getSelectedIndex() == 1 || comboOpPilaTr.getSelectedIndex() == 4){
-            textEntradaAR.setVisible(true);
+            textEntradaAR.setEnabled(true);
         }else{
-            textEntradaAR.setVisible(false);
+            textEntradaAR.setEnabled(false);
         }
     }//GEN-LAST:event_comboOpPilaTrActionPerformed
 
@@ -977,6 +807,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             if(botonTrAceptacion.isSelected()){
                 TransicionAceptacion tr = new TransicionAceptacion(simboloPila, simboloEntrada);
                 agregarTransicion(estado, tr);
+                botonTrAceptacion.doClick();
             }else{
                 if(comboOpEntradaTr.getSelectedIndex() != 0 && comboOpEstadoTr.getSelectedIndex() != 0 && comboOpPilaTr.getSelectedIndex() != 0){
                     String opEntrada = comboOpEntradaTr.getSelectedItem().toString();
@@ -1011,7 +842,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private void botonConfirmarAPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmarAPActionPerformed
         if(!labelEstadoI.getText().equals("Estado inicial: NO SELECCIONADO")){
             cambiarEstadoBotones1(false);
-            cambiarEstadoBotones2(false);            
+            cambiarEstadoBotones2(false);  
+            cambiarEstadoBotones3(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "NO SE HA SELECCIONADO NINGUN ESTADO DE INICIAL",
                 "ERROR EN EL AUTOMATA", JOptionPane.ERROR_MESSAGE);
@@ -1023,6 +855,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         cambiarEstadoBotones1(true);
         botonConfirmar1.setEnabled(true);
         cambiarEstadoBotones2(false);
+        cambiarEstadoBotones3(false);
     }//GEN-LAST:event_botonEditarAPActionPerformed
 
     private void botonConfirmar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfirmar1ActionPerformed
@@ -1046,40 +879,107 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonConfirmar1ActionPerformed
 
     private void botonTrAceptacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTrAceptacionActionPerformed
-        // TODO add your handling code here:
+        if(botonTrAceptacion.isSelected()){
+            comboOpEntradaTr.setEnabled(false);
+            comboOpPilaTr.setEnabled(false);
+            comboOpEstadoTr.setEnabled(false);
+        }else{
+            comboOpEntradaTr.setEnabled(true);
+            comboOpPilaTr.setEnabled(true);
+            comboOpEstadoTr.setEnabled(true);
+        }
     }//GEN-LAST:event_botonTrAceptacionActionPerformed
 
     private void botonReconocerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReconocerActionPerformed
-        String cadena = textCadenaEntrada.getText();
+        String cadena = textCadenaEntrada.getText().trim();
         if(!cadenaConSimbolosEntrada(cadena)){
             JOptionPane.showMessageDialog(this, "LA CADENA INGRESADA DEBE ESTAR COMPUESTA POR LOS SÍMBOLOS DE ENTRADA"
                     + " DEL AUTOMATA", "ERROR", JOptionPane.ERROR_MESSAGE);
         }else{
-            if(cadena.charAt(cadena.length() - 1) != '¬'){
+            if(cadena.equals("") || cadena.charAt(cadena.length() - 1) != '¬'){
                 cadena += "¬";
             }
             if(ap.reconocer(cadena)){
-                JOptionPane.showMessageDialog(this, "Cadena reconocida", "Reconocedor", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cadena reconocida", "Reconocedor", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(this, "Cadena no reconocida", "Reconocedor", JOptionPane.WARNING_MESSAGE);
             }
+            reiniciarPila();
         }
     }//GEN-LAST:event_botonReconocerActionPerformed
 
     private void botonSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSiguienteActionPerformed
-        //TODO
+        int indiceSimboloALeer = textCadenaLeida.getText().length();
+        String estadoActual = textEstadoActual.getText();
+        Character simboloEntrada = textCadenaEntrada.getText().charAt(indiceSimboloALeer);
+        if(!ap.reconocerSimbolo(simboloEntrada, estadoActual)){
+            JOptionPane.showMessageDialog(this, "Cadena no reconocida", "Reconocedor", JOptionPane.WARNING_MESSAGE);
+            labelTransicionUsada.setText("Rechace");
+            cambiarIniciarAReiniciar();
+        }else{
+            Character simboloPila;
+            if(AutomataPila.pila.empty()){
+                simboloPila = '▼';
+            }else{
+                simboloPila = AutomataPila.pila.peek().charAt(0);
+            }
+            Transicion tr = ap.getTransicion(estadoActual, simboloPila, simboloEntrada);
+            if(tr.esAceptacion){
+                JOptionPane.showMessageDialog(this, "Cadena reconocida", "Reconocedor", JOptionPane.INFORMATION_MESSAGE);
+                labelTransicionUsada.setText("Acepte");
+                cambiarIniciarAReiniciar();
+            }else{
+                TransicionComun transicion = (TransicionComun) tr;
+                labelTransicionUsada.setText(textEstadoActual.getText() + ": " + tr.toString());
+                textEstadoActual.setText(transicion.operacionEstado);
+                ap.operarPila(transicion.operacionPila, transicion.simboloAR);
+                tablaPila.setModel(controladorTabla.actualizarPila());
+                if(transicion.operacionEntrada.equals("Avance")){
+                    String cadenaLeida = textCadenaLeida.getText().concat(simboloEntrada.toString()); 
+                    textCadenaLeida.setText(cadenaLeida);
+                    String simboloActual;
+                    if(cadenaLeida.length() != textCadenaEntrada.getText().length()){
+                        simboloActual = textCadenaEntrada.getText().substring(cadenaLeida.length(), cadenaLeida.length() + 1);
+                        textSimboloActual.setText(simboloActual);                        
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Cadena no reconocida", "Reconocedor", JOptionPane.WARNING_MESSAGE);
+                        labelTransicionUsada.setText("Rechazo por no haber más símbolos a reconocer");
+                        reiniciarPila();
+                    }                    
+                }
+            }
+            
+        }
     }//GEN-LAST:event_botonSiguienteActionPerformed
 
     private void botonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarActionPerformed
-        String cadena = textCadenaEntrada.getText();
-        if(!cadenaConSimbolosEntrada(cadena)){
-            JOptionPane.showMessageDialog(this, "LA CADENA INGRESADA DEBE ESTAR COMPUESTA POR LOS SÍMBOLOS DE ENTRADA"
-                    + " DEL AUTOMATA", "ERROR", JOptionPane.ERROR_MESSAGE);
+        if(botonIniciar.getText().equals("Iniciar")){
+            String cadena = textCadenaEntrada.getText().trim();
+            if(!cadenaConSimbolosEntrada(cadena)){
+                JOptionPane.showMessageDialog(this, "LA CADENA INGRESADA DEBE ESTAR COMPUESTA POR LOS SÍMBOLOS DE ENTRADA"
+                        + " DEL AUTOMATA", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }else{
+                if(cadena.equals("") || cadena.charAt(cadena.length() - 1) != '¬'){
+                    cadena += "¬";
+                    textCadenaEntrada.setText(cadena);
+                }
+                botonIniciar.setEnabled(false);
+                botonSiguiente.setEnabled(true);
+                textCadenaEntrada.setEditable(false);
+                textSimboloActual.setText(cadena.substring(0, 1));            
+                String estadoInicial = comboEstadoI.getSelectedItem().toString();
+                textEstadoActual.setText(estadoInicial);
+                botonReconocer.setEnabled(false);
+            }
         }else{
-            botonIniciar.setEnabled(false);
-            botonSiguiente.setEnabled(true);
-            textCadenaEntrada.setEditable(false);
-            textSimboloActual.setText(cadena.substring(0, 1));
+            reiniciarPila();
+            textCadenaLeida.setText("");
+            textEstadoActual.setText("");
+            textSimboloActual.setText("");
+            botonIniciar.setText("Iniciar");
+            labelTransicionUsada.setText("|");
+            textCadenaEntrada.setEditable(true);
+            botonReconocer.setEnabled(true);
         }
     }//GEN-LAST:event_botonIniciarActionPerformed
 
@@ -1113,6 +1013,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         comboEstadoTr.setEnabled(b);
         comboSimEntTr.setEnabled(b);
         comboSimPilaTr.setEnabled(b);
+        botonTrAceptacion.setEnabled(b);
         comboOpEntradaTr.setEnabled(b);
         comboOpEstadoTr.setEnabled(b);
         comboOpPilaTr.setEnabled(b);
@@ -1120,6 +1021,34 @@ public class GUIPrincipal extends javax.swing.JFrame {
         botonAddTransicion.setEnabled(b);
         botonEliminarTransicion.setEnabled(b);
         botonConfirmarAP.setEnabled(b);
+    }
+    
+    public void cambiarEstadoBotones3(boolean b){
+        textCadenaEntrada.setEditable(b);
+        botonReconocer.setEnabled(b);
+        botonIniciar.setEnabled(b);
+        textCadenaLeida.setText("");
+        textEstadoActual.setText("");
+        textSimboloActual.setText("");
+        botonIniciar.setText("Iniciar");
+        labelTransicionUsada.setText("|");
+        textCadenaEntrada.setEditable(b);
+    }
+    
+    public void terminarReconocedor(){
+        textCadenaLeida.setText("");
+        textEstadoActual.setText("");
+        textSimboloActual.setText("");
+        botonIniciar.setText("Iniciar");
+        labelTransicionUsada.setText("|");
+        textCadenaEntrada.setEditable(false);
+        botonReconocer.setEnabled(false);
+    }
+    
+    public void cambiarIniciarAReiniciar(){
+        botonIniciar.setText("Reiniciar");
+        botonIniciar.setEnabled(true);
+        botonSiguiente.setEnabled(false);
     }
     
     public boolean cadenaConSimbolosPila(String cadena){
@@ -1208,22 +1137,23 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelFondo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelConfig;
     private javax.swing.JLabel labelEstadoI;
     private javax.swing.JLabel labelEstados;
-    private javax.swing.JLabel labelFin;
-    private javax.swing.JLabel labelResultado;
     private javax.swing.JLabel labelSimbolosEntrada;
     private javax.swing.JLabel labelSimbolosPila;
+    private javax.swing.JLabel labelTransicionUsada;
     private javax.swing.JTable tablaPila;
     private javax.swing.JTable tablaTransiciones;
     private javax.swing.JTextField textCadenaEntrada;

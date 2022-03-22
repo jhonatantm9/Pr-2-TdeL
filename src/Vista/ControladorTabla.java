@@ -160,7 +160,7 @@ public class ControladorTabla {
                 } else {
                     for (int j = 0; j < transicionesGUI.size(); j++) {
                         if (transicionesGUI.get(j).equals(transiciones.get(i))) {
-                            agregarTransicionTabla(nombre, String.valueOf(j + 1), transiciones.get(i));
+                            agregarTransicionTabla(nombre, "#" + String.valueOf(j + 1), transiciones.get(i));
                         }
                     }
                 }

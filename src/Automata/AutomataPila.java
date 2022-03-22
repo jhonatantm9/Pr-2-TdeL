@@ -16,6 +16,7 @@ public class AutomataPila {
     private ArrayList<Estado> estados;
     private Estado estadoInicial;
     public static Stack<String> pila;
+    public String estadoActual = "";
     
     public AutomataPila(){
         estados = new ArrayList<>();
@@ -127,7 +128,13 @@ public class AutomataPila {
         Estado estadoActual = this.getEstadoInicial();
 
         for (int i = 0; i < simbolo.length; i++) {
-            Transicion tr = estadoActual.getTransicion(simbolo[i], pila.peek().charAt(0));
+            Character simboloPila;
+            if(pila.empty()){
+                simboloPila = '▼';
+            }else{
+                simboloPila = pila.peek().charAt(0);
+            }
+            Transicion tr = estadoActual.getTransicion(simbolo[i], simboloPila);
             if(tr == null){
                 return false;
             }else if(tr.esAceptacion){
@@ -157,6 +164,7 @@ public class AutomataPila {
         }else if(opPila.equals("Apilar")){
             pila.push(simboloAR);
         }else if(opPila.equals("Replace")){
+            pila.pop();
             char[] simbolosAR = simboloAR.toCharArray();
             for (char c : simbolosAR) {
                 pila.push(String.valueOf(c));
@@ -187,6 +195,22 @@ public class AutomataPila {
             return true;
         }
         return false;
+    }
+    
+    public boolean reconocerSimbolo(Character simboloEntrada, String nombreEstado){
+        Character simboloPila;
+        if(pila.empty()){
+            simboloPila = '▼';
+        }else{
+            simboloPila = pila.peek().charAt(0);
+        }
+        Transicion tr = getTransicion(nombreEstado, simboloPila, simboloEntrada);
+        if(tr == null){
+            estadoActual = "";
+            return false;
+        }else{
+            return true;
+        }
     }
 
     public ArrayList<Estado> getEstados() {
